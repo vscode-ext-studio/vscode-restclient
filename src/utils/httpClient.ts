@@ -17,6 +17,8 @@ import { UserDataManager } from './userDataManager';
 import { getCurrentHttpFileName, getWorkspaceRootPath } from './workspaceUtility';
 
 import got = require('got');
+import axios, { AxiosResponse } from 'axios';
+import { Agent } from 'https';
 
 const encodeUrl = require('encodeurl');
 const cookieStore = require('tough-cookie-file-store-bugfix');
@@ -47,18 +49,16 @@ export class HttpClient {
         let bodySize = 0;
         let headersSize = 0;
         const requestUrl = encodeUrl(httpRequest.url);
-        const request = got(requestUrl, options);
-        (request as any).on('response', res => {
-            if (res.rawHeaders) {
-                headersSize += res.rawHeaders.map(h => h.length).reduce((a, b) => a + b, 0);
-                headersSize += (res.rawHeaders.length) / 2;
-            }
-            res.on('data', chunk => {
-                bodySize += chunk.length;
-            });
+        const startDate = new Date().getTime();
+        const req = axios.request({
+            url: requestUrl, method: options.method as any, headers: options.headers, data: options.body, responseType: "arraybuffer", httpsAgent: new Agent({
+                rejectUnauthorized: false,
+            })
+        }).catch(err => {
+            if (!err.response) throw err;
+            return err.response;
         });
-
-        const response = await request;
+        const response: AxiosResponse = await req;
 
         const contentType = response.headers['content-type'];
         let encoding: string | undefined;
@@ -70,7 +70,7 @@ export class HttpClient {
             encoding = "utf8";
         }
 
-        const bodyBuffer = response.body;
+        const bodyBuffer = response.data;
         let bodyString = iconv.encodingExists(encoding) ? iconv.decode(bodyBuffer, encoding) : bodyBuffer.toString();
 
         if (this._settings.decodeEscapedUnicodeCharacters) {
@@ -78,25 +78,27 @@ export class HttpClient {
         }
 
         // adjust response header case, due to the response headers in nodejs http module is in lowercase
-        const responseHeaders: ResponseHeaders = HttpClient.normalizeHeaderNames(response.headers, response.rawHeaders);
+        const responseHeaders: ResponseHeaders = response.headers;
 
         const requestBody = options.body;
 
         return new HttpResponse(
-            response.statusCode,
-            response.statusMessage,
-            response.httpVersion,
+            response.status,
+            response.statusText,
+            '1.1',
             responseHeaders,
             bodyString,
             bodySize,
             headersSize,
             bodyBuffer,
-            response.timings.phases,
+            {
+                total: new Date().getTime() - startDate
+            } as any,
             new HttpRequest(
                 options.method!,
                 requestUrl,
                 HttpClient.normalizeHeaderNames(
-                    (response as any).request.gotOptions.headers as RequestHeaders,
+                    httpRequest.headers,
                     Object.keys(httpRequest.headers)),
                 Buffer.isBuffer(requestBody) ? convertBufferToStream(requestBody) : requestBody,
                 httpRequest.rawBody,
