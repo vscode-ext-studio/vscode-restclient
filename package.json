@@ -645,7 +645,6 @@
   },
   "dependencies": {
     "adal-node": "^0.1.26",
-    "applicationinsights": "^1.0.5",
     "aws4": "^1.9.1",
     "axios": "^0.21.1",
     "code-highlight-linenums": "^0.2.1",
