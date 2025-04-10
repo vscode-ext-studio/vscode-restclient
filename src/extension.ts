@@ -27,7 +27,7 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(codeSnippetController);
     context.subscriptions.push(commands.registerCommand('vscode-office.request', ((document: TextDocument, range: Range) => requestController.run(range))));
     context.subscriptions.push(commands.registerCommand('vscode-office.cancel-request', () => requestController.cancel()));
-    context.subscriptions.push(commands.registerCommand('vscode-office.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
+    context.subscriptions.push(commands.registerCommand('vscode-office.copy-request-as-curl', (document: TextDocument, range: Range) => codeSnippetController.copyAsCurl(document, range)));
     context.subscriptions.push(commands.registerCommand('vscode-office._openDocumentLink', args => {
         workspace.openTextDocument(Uri.parse(args.path)).then(window.showTextDocument, error => {
             window.showErrorMessage(error.message);

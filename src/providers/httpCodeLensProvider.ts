@@ -10,12 +10,19 @@ export class HttpCodeLensProvider implements CodeLensProvider {
 
         for (const [blockStart, blockEnd] of requestRanges) {
             const range = new Range(blockStart, 0, blockEnd, 0);
-            const cmd: Command = {
+            const sendCmd: Command = {
                 arguments: [document, range],
-                title: 'Send',
+                title: '$(run) Send',
                 command: 'vscode-office.request'
             };
-            blocks.push(new CodeLens(range, cmd));
+            blocks.push(new CodeLens(range, sendCmd));
+
+            const curlCmd: Command = {
+                arguments: [document, range],
+                title: 'Copy as cURL',
+                command: 'vscode-office.copy-request-as-curl'
+            };
+            blocks.push(new CodeLens(range, curlCmd));
         }
 
         return Promise.resolve(blocks);

@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import * as url from 'url';
-import { Clipboard, env, window } from 'vscode';
+import { Clipboard, env, window, TextDocument, Range } from 'vscode';
 import { HARCookie, HARHeader, HARHttpRequest, HARPostData } from '../models/harHttpRequest';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
@@ -19,14 +19,16 @@ export class CodeSnippetController {
     }
 
     @trace('Copy Request As cURL')
-    public async copyAsCurl() {
+    public async copyAsCurl(document?: TextDocument, range?: Range) {
         const editor = window.activeTextEditor;
-        const document = getCurrentTextDocument();
+        if (!document) {
+            document = getCurrentTextDocument();
+        }
         if (!editor || !document) {
             return;
         }
 
-        const selectedRequest = await Selector.getRequest(editor);
+        const selectedRequest = await Selector.getRequest(editor, range);
         if (!selectedRequest) {
             return;
         }
@@ -46,7 +48,12 @@ export class CodeSnippetController {
         if (bodyStr && harHttpRequest?.postData?.text.includes('"')) {
             bodyStr = `-d '${harHttpRequest.postData.text}'`;
         }
-        const result = `curl -X ${harHttpRequest.method} ${harHttpRequest.headers.map(header => `-H "${header.name}: ${header.value}"`).join(' ')} ${bodyStr} ${encodeUrl(originalUrl)}`;
+        const result = [
+            `curl -X ${harHttpRequest.method}`,
+            ...harHttpRequest.headers.map(header => `-H "${header.name}: ${header.value}"`),
+            bodyStr,
+            `'${encodeUrl(originalUrl)}'`
+        ].filter(Boolean).join(process.platform === 'win32' ? ' ' : ` \\${EOL}  `);
         await this.clipboard.writeText(result);
     }
 
