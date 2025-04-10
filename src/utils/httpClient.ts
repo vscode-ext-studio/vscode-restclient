@@ -8,15 +8,12 @@ import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { RestClientSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { HttpResponse } from '../models/httpResponse';
-import { awsSignature } from './auth/awsSignature';
-import { digest } from './auth/digest';
 import { MimeUtility } from './mimeUtility';
 import { getHeader, hasHeader, removeHeader } from './misc';
 import { convertBufferToStream, convertStreamToBuffer } from './streamUtility';
 import { UserDataManager } from './userDataManager';
 import { getCurrentHttpFileName, getWorkspaceRootPath } from './workspaceUtility';
 
-import got = require('got');
 import axios, { AxiosResponse } from 'axios';
 import { Agent } from 'https';
 
@@ -33,6 +30,21 @@ type Certificate = {
     passphrase?: string;
 };
 
+interface RequestOption {
+    method: string;
+    headers: RequestHeaders;
+    body?: string | Buffer;
+    encoding?: null;
+    decompress?: boolean;
+    followRedirect?: boolean;
+    retry?: number;
+    rejectUnauthorized?: boolean;
+    throwHttpErrors?: boolean;
+    cookieJar?: CookieJar;
+    timeout?: number | { connect: number; socket: number; response: number; send: number };
+    agent?: any;
+}
+
 export class HttpClient {
     private readonly _settings: RestClientSettings = RestClientSettings.Instance;
 
@@ -45,13 +57,14 @@ export class HttpClient {
 
     public async send(httpRequest: HttpRequest): Promise<HttpResponse> {
         const options = await this.prepareOptions(httpRequest);
+        const { method, headers, body } = options;
 
         let bodySize = 0;
         let headersSize = 0;
         const requestUrl = encodeUrl(httpRequest.url);
         const startDate = new Date().getTime();
         const req = axios.request({
-            url: requestUrl, method: options.method as any, headers: options.headers, data: options.body, responseType: "arraybuffer", httpsAgent: new Agent({
+            url: requestUrl, method: method as any, headers: headers, data: body, responseType: "arraybuffer", httpsAgent: new Agent({
                 rejectUnauthorized: false,
             })
         }).catch(err => {
@@ -80,7 +93,7 @@ export class HttpClient {
         // adjust response header case, due to the response headers in nodejs http module is in lowercase
         const responseHeaders: ResponseHeaders = response.headers;
 
-        const requestBody = options.body;
+        const requestBody = body;
 
         return new HttpResponse(
             response.status,
@@ -95,7 +108,7 @@ export class HttpClient {
                 total: new Date().getTime() - startDate
             } as any,
             new HttpRequest(
-                options.method!,
+                method!,
                 requestUrl,
                 HttpClient.normalizeHeaderNames(
                     httpRequest.headers,
@@ -106,7 +119,7 @@ export class HttpClient {
             ));
     }
 
-    private async prepareOptions(httpRequest: HttpRequest): Promise<got.GotBodyOptions<null>> {
+    private async prepareOptions(httpRequest: HttpRequest): Promise<RequestOption> {
         const originalRequestBody = httpRequest.body;
         let requestBody: string | Buffer | undefined;
         if (originalRequestBody) {
@@ -120,7 +133,7 @@ export class HttpClient {
         // Fix #682 Do not touch original headers in httpRequest, which may be used for retry later
         // Simply do a shadow copy here
         const clonedHeaders = Object.assign({}, httpRequest.headers);
-        const options: got.GotBodyOptions<null> = {
+        const options: RequestOption = {
             headers: clonedHeaders,
             method: httpRequest.method,
             body: requestBody,
@@ -131,20 +144,6 @@ export class HttpClient {
             throwHttpErrors: false,
             cookieJar: this._settings.rememberCookiesForSubsequentRequests ? new CookieJar(this.cookieStore, { rejectPublicSuffixes: false }) : undefined,
             retry: 0,
-            hooks: {
-                afterResponse: [],
-                // Following port reset on redirect can be removed after upgrade got to version 10.0
-                // https://github.com/sindresorhus/got/issues/719
-                beforeRedirect: [
-                    opts => {
-                        const redirectHost = ((opts as any).href as string).split('/')[2];
-                        if (!redirectHost.includes(':')) {
-                            delete opts.port;
-                        }
-                    }
-                ],
-                beforeRequest: [],
-            }
         };
 
         if (this._settings.timeoutInMilliseconds > 0) {
@@ -161,12 +160,6 @@ export class HttpClient {
                 if (normalizedScheme === 'basic') {
                     removeHeader(options.headers!, 'Authorization');
                     options.auth = `${user}:${pass}`;
-                } else if (normalizedScheme === 'digest') {
-                    removeHeader(options.headers!, 'Authorization');
-                    options.hooks!.afterResponse!.push(digest(user, pass));
-                } else if (normalizedScheme === 'aws') {
-                    removeHeader(options.headers!, 'Authorization');
-                    options.hooks!.beforeRequest!.push(awsSignature(authorization));
                 }
             } else if (normalizedScheme === 'basic' && user.includes(':')) {
                 removeHeader(options.headers!, 'Authorization');

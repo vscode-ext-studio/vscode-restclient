@@ -365,12 +365,6 @@
           "scope": "resource",
           "description": "Remember cookies for subsequent requests"
         },
-        "rest-client.enableTelemetry": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "Send out anonymous usage data"
-        },
         "rest-client.excludeHostsForProxy": {
           "type": "array",
           "default": [],
@@ -632,7 +626,6 @@
   "devDependencies": {
     "@types/aws4": "^1.5.1",
     "@types/fs-extra": "^5.0.4",
-    "@types/got": "^9.6.8",
     "@types/mocha": "^5.2.6",
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.57.0",
@@ -644,8 +637,6 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "adal-node": "^0.1.26",
-    "aws4": "^1.9.1",
     "axios": "^0.21.1",
     "code-highlight-linenums": "^0.2.1",
     "combined-stream": "^1.0.5",
@@ -654,7 +645,6 @@
     "encodeurl": "^1.0.1",
     "filesize": "^3.3.0",
     "fs-extra": "^5.0.0",
-    "got": "^9.6.0",
     "highlight.js": "^10.4.1",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.3",

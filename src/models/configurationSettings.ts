@@ -24,7 +24,6 @@ interface IRestClientSettings {
     proxy?: string;
     proxyStrictSSL: boolean;
     rememberCookiesForSubsequentRequests: boolean;
-    enableTelemetry: boolean;
     excludeHostsForProxy: string[];
     fontSize?: number;
     fontFamily?: string;
@@ -57,7 +56,6 @@ export class RestClientSettings implements IRestClientSettings {
     public proxy?: string;
     public proxyStrictSSL: boolean;
     public rememberCookiesForSubsequentRequests: boolean;
-    public enableTelemetry: boolean;
     public excludeHostsForProxy: string[];
     public fontSize?: number;
     public fontFamily?: string;
@@ -119,9 +117,9 @@ export class RestClientSettings implements IRestClientSettings {
         const restClientSettings = workspace.getConfiguration("rest-client", document?.uri);
         this.followRedirect = restClientSettings.get<boolean>("followredirect", true);
         this.defaultHeaders = restClientSettings.get<RequestHeaders>("defaultHeaders",
-                                                                     {
-                                                                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.62"
-                                                                     });
+            {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.62"
+            });
         this.showResponseInDifferentTab = restClientSettings.get<boolean>("showResponseInDifferentTab", false);
         this.requestNameAsResponseTabTitle = restClientSettings.get<boolean>("requestNameAsResponseTabTitle", false);
         this.rememberCookiesForSubsequentRequests = restClientSettings.get<boolean>("rememberCookiesForSubsequentRequests", true);
@@ -146,7 +144,6 @@ export class RestClientSettings implements IRestClientSettings {
         this.largeResponseBodySizeLimitInMB = restClientSettings.get<number>("largeResponseBodySizeLimitInMB", 5);
         this.previewOption = ParsePreviewOptionStr(restClientSettings.get<string>("previewOption", "full"));
         this.formParamEncodingStrategy = ParseFormParamEncodingStr(restClientSettings.get<string>("formParamEncodingStrategy", "automatic"));
-        this.enableTelemetry = restClientSettings.get<boolean>('enableTelemetry', true);
         this.suppressResponseBodyContentTypeValidationWarning = restClientSettings.get('suppressResponseBodyContentTypeValidationWarning', false);
         this.addRequestBodyLineIndentationAroundBrackets = restClientSettings.get<boolean>('addRequestBodyLineIndentationAroundBrackets', true);
         this.decodeEscapedUnicodeCharacters = restClientSettings.get<boolean>('decodeEscapedUnicodeCharacters', false);
