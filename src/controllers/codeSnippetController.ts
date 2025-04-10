@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import * as url from 'url';
-import { Clipboard, env, ExtensionContext, window } from 'vscode';
+import { Clipboard, env, window } from 'vscode';
 import { HARCookie, HARHeader, HARHttpRequest, HARPostData } from '../models/harHttpRequest';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
@@ -8,17 +8,13 @@ import { trace } from "../utils/decorator";
 import { base64 } from '../utils/misc';
 import { Selector } from '../utils/selector';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
-import { CodeSnippetWebview } from '../views/codeSnippetWebview';
 
 const encodeUrl = require('encodeurl');
-const HTTPSnippet = require('httpsnippet');
 
 export class CodeSnippetController {
     private readonly clipboard: Clipboard;
-    private _webview: CodeSnippetWebview;
 
-    constructor(context: ExtensionContext) {
-        this._webview = new CodeSnippetWebview(context);
+    constructor() {
         this.clipboard = env.clipboard;
     }
 
@@ -38,20 +34,19 @@ export class CodeSnippetController {
         const { text } = selectedRequest;
 
         // parse http request
-        const httpRequest = await RequestParserFactory.createRequestParser(text).parseHttpRequest();
+        const httpRequest = await RequestParserFactory.createRequestParser(text).parseHttpRequest(null, false);
 
         const harHttpRequest = this.convertToHARHttpRequest(httpRequest);
         const addPrefix = !(url.parse(harHttpRequest.url).protocol);
         const originalUrl = harHttpRequest.url;
         if (addPrefix) {
-            // Add protocol for url that doesn't specify protocol to pass the HTTPSnippet validation #328
             harHttpRequest.url = `http://${originalUrl}`;
         }
-        const snippet = new HTTPSnippet(harHttpRequest);
-        if (addPrefix) {
-            snippet.requests[0].fullUrl = originalUrl;
+        let bodyStr = harHttpRequest.postData ? `-d "${harHttpRequest.postData.text}"` : '';
+        if (bodyStr && harHttpRequest?.postData?.text.includes('"')) {
+            bodyStr = `-d '${harHttpRequest.postData.text}'`;
         }
-        const result = snippet.convert('shell', 'curl', process.platform === 'win32' ? { indent: false } : {});
+        const result = `curl -X ${harHttpRequest.method} ${harHttpRequest.headers.map(header => `-H "${header.name}: ${header.value}"`).join(' ')} ${bodyStr} ${encodeUrl(originalUrl)}`;
         await this.clipboard.writeText(result);
     }
 
@@ -99,7 +94,6 @@ export class CodeSnippetController {
     }
 
     public dispose() {
-        this._webview.dispose();
     }
 
     private static normalizeAuthHeader(authHeader: string) {

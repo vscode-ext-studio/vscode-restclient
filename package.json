@@ -372,21 +372,15 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "code-highlight-linenums": "^0.2.1",
     "combined-stream": "^1.0.5",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
-    "filesize": "^3.3.0",
     "highlight.js": "^10.4.1",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.3",
-    "httpsnippet": "^1.22.0",
-    "iconv-lite": "^0.4.15",
     "jsonpath-plus": "^0.20.1",
     "mime-types": "^2.1.14",
     "pretty-data": "^0.40.0",
-    "xmldom": "^0.5.0",
-    "xpath": "^0.0.27",
     "yargs-parser": "~11.1.1"
   }
 }

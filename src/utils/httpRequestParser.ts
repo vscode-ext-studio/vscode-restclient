@@ -29,7 +29,7 @@ export class HttpRequestParser implements RequestParser {
     public constructor(private readonly requestRawText: string, private readonly settings: RestClientSettings) {
     }
 
-    public async parseHttpRequest(name?: string): Promise<HttpRequest> {
+    public async parseHttpRequest(name?: string, withHeader: boolean): Promise<HttpRequest> {
         // parse follows http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
         // split the request raw text into lines
         const lines: string[] = this.requestRawText.split(EOL);
@@ -76,7 +76,7 @@ export class HttpRequestParser implements RequestParser {
         const requestLine = this.parseRequestLine(requestLines.map(l => l.trim()).join(''));
 
         // parse headers lines
-        const headers = parseRequestHeaders(headersLines, this.settings.defaultHeaders, requestLine.url);
+        const headers = parseRequestHeaders(headersLines, withHeader ? this.settings.defaultHeaders : {}, requestLine.url);
 
         // let underlying node.js library recalculate the content length
         removeHeader(headers, 'content-length');

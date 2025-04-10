@@ -1,4 +1,3 @@
-import * as iconv from 'iconv-lite';
 import * as url from 'url';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { RestClientSettings } from '../models/configurationSettings';
@@ -60,7 +59,7 @@ export class HttpClient {
         }
 
         const bodyBuffer = response.data;
-        let bodyString = iconv.encodingExists(encoding) ? iconv.decode(bodyBuffer, encoding) : bodyBuffer.toString();
+        let bodyString = bodyBuffer.toString();
 
         if (this._settings.decodeEscapedUnicodeCharacters) {
             bodyString = this.decodeEscapedUnicodeCharacters(bodyString);

@@ -4,8 +4,6 @@ import { ResolveErrorMessage, ResolveResult, ResolveState, ResolveWarningMessage
 import { MimeUtility } from './mimeUtility';
 import { getContentType, getHeader, isJSONString } from './misc';
 
-const xpath = require('xpath');
-const { DOMParser } = require('xmldom');
 const { JSONPath } = require('jsonpath-plus');
 
 const requestVariablePathRegex: RegExp = /^(\w+)(?:\.(request|response)(?:\.(body|headers)(?:\.(.*))?)?)?$/;
@@ -62,8 +60,6 @@ export class RequestVariableCacheValueProcessor {
                 const parsedBody = JSON.parse(body as string);
 
                 return this.resolveJsonHttpBody(parsedBody, nameOrPath);
-            } else if (MimeUtility.isXml(contentTypeHeader)) {
-                return this.resolveXmlHttpBody(body, nameOrPath);
             } else {
                 return { state: ResolveState.Warning, value: body, message: ResolveWarningMessage.UnsupportedBodyContentType };
             }
@@ -97,33 +93,6 @@ export class RequestVariableCacheValueProcessor {
         }
     }
 
-    private static resolveXmlHttpBody(body: any, path: string): ResolveResult {
-        try {
-            const doc = new DOMParser().parseFromString(body);
-            const results = xpath.select(path, doc);
-            if (typeof results === 'string') {
-                return { state: ResolveState.Success, value: results };
-            } else {
-                if (results.length === 0) {
-                    return { state: ResolveState.Warning, message: ResolveWarningMessage.IncorrectXPath };
-                } else {
-                    const result = results[0];
-                    if (result.nodeType === NodeType.Document) {
-                        // Document
-                        return { state: ResolveState.Success, value: result.documentElement.toString() };
-                    } else if (result.nodeType === NodeType.Element) {
-                        // Element
-                        return { state: ResolveState.Success, value: result.childNodes.toString() };
-                    } else {
-                        // Attribute
-                        return { state: ResolveState.Success, value: result.nodeValue };
-                    }
-                }
-            }
-        } catch {
-            return { state: ResolveState.Warning, message: ResolveWarningMessage.InvalidXPath };
-        }
-    }
 }
 
 const enum NodeType {

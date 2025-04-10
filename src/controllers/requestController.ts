@@ -5,7 +5,6 @@ import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
 import { trace } from "../utils/decorator";
 import { HttpClient } from '../utils/httpClient';
-import { RequestState, RequestStatusEntry } from '../utils/requestStatusBarEntry';
 import { RequestVariableCache } from "../utils/requestVariableCache";
 import { Selector } from '../utils/selector';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
@@ -14,17 +13,14 @@ import { HttpResponseWebview } from '../views/httpResponseWebview';
 
 export class RequestController {
     private readonly _restClientSettings: RestClientSettings = RestClientSettings.Instance;
-    private _requestStatusEntry: RequestStatusEntry;
     private _httpClient: HttpClient;
     private _webview: HttpResponseWebview;
     private _textDocumentView: HttpResponseTextDocumentView;
     private _lastPendingRequest?: HttpRequest;
 
     public constructor(context: ExtensionContext) {
-        this._requestStatusEntry = new RequestStatusEntry();
         this._httpClient = new HttpClient();
         this._webview = new HttpResponseWebview(context);
-        this._webview.onDidCloseAllWebviewPanels(() => this._requestStatusEntry.update({ state: RequestState.Closed }));
         this._textDocumentView = new HttpResponseTextDocumentView();
     }
 
@@ -61,12 +57,10 @@ export class RequestController {
     public async cancel() {
         this._lastPendingRequest?.cancel();
 
-        this._requestStatusEntry.update({ state: RequestState.Cancelled });
     }
 
     private async runCore(httpRequest: HttpRequest, document?: TextDocument) {
         // clear status bar
-        this._requestStatusEntry.update({ state: RequestState.Pending });
 
         // set http request
         try {
@@ -76,8 +70,6 @@ export class RequestController {
             if (httpRequest.isCancelled) {
                 return;
             }
-
-            this._requestStatusEntry.update({ state: RequestState.Received, response });
 
             if (httpRequest.name && document) {
                 RequestVariableCache.add(document, httpRequest.name, response);
@@ -111,7 +103,6 @@ export class RequestController {
             } else if (error.code === 'ENETUNREACH') {
                 error.message = `You don't seem to be connected to a network. Details: ${error}`;
             }
-            this._requestStatusEntry.update({ state: RequestState.Error });
             Logger.error('Failed to send request:', error);
             window.showErrorMessage(error.message);
         } finally {
@@ -122,7 +113,6 @@ export class RequestController {
     }
 
     public dispose() {
-        this._requestStatusEntry.dispose();
         this._webview.dispose();
     }
 }
