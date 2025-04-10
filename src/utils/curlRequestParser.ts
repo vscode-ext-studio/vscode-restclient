@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
 import { RequestHeaders } from '../models/base';
 import { RestClientSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';

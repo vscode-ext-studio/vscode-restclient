@@ -1,5 +1,4 @@
-import * as fs from 'fs-extra';
-import * as os from 'os';
+import * as fs from 'fs';
 import { Clipboard, commands, env, ExtensionContext, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { HttpRequest } from '../models/httpRequest';
@@ -133,13 +132,6 @@ export class HttpResponseWebview extends BaseWebview {
         return `${prefix}(${response.timingPhases.total ?? 0}ms)`;
     }
 
-    private getFullResponseString(response: HttpResponse): string {
-        const statusLine = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}${os.EOL}`;
-        const headerString = Object.entries(response.headers).reduce((acc, [name, value]) => acc + `${name}: ${value}${os.EOL}`, '');
-        const body = response.body ? `${os.EOL}${response.body}` : '';
-        return `${statusLine}${headerString}${body}`;
-    }
-
     private async openSaveDialog(path: string, content: string | Buffer) {
         const uri = await window.showSaveDialog({ defaultUri: Uri.file(path) });
         if (!uri) {
@@ -147,7 +139,7 @@ export class HttpResponseWebview extends BaseWebview {
         }
 
         const filePath = uri.fsPath;
-        await fs.writeFile(filePath, content, { flag: 'w' });
+        await fs.writeFileSync(filePath, content, { flag: 'w' });
         const btn = await window.showInformationMessage(`Saved to ${filePath}`, { title: OPEN }, { title: COPYPATH });
         if (btn?.title === OPEN) {
             workspace.openTextDocument(filePath).then(window.showTextDocument);
@@ -369,7 +361,7 @@ ${HttpResponseWebview.formatHeaders(response.headers)}`;
             if (headers.hasOwnProperty(header)) {
                 let value = headers[header];
                 if (typeof headers[header] !== 'string') {
-                    value = <string>headers[header];
+                    value = `${headers[header]}`;
                 }
                 headerString += `${header}: ${value}\n`;
             }

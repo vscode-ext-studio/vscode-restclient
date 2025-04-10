@@ -1,7 +1,6 @@
 import { EOL } from 'os';
 import * as url from 'url';
-import { Clipboard, env, ExtensionContext, QuickInputButtons, window } from 'vscode';
-import Logger from '../logger';
+import { Clipboard, env, ExtensionContext, window } from 'vscode';
 import { HARCookie, HARHeader, HARHttpRequest, HARPostData } from '../models/harHttpRequest';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
@@ -14,21 +13,7 @@ import { CodeSnippetWebview } from '../views/codeSnippetWebview';
 const encodeUrl = require('encodeurl');
 const HTTPSnippet = require('httpsnippet');
 
-type CodeSnippetClient = {
-    key: string;
-    title: string;
-    link: string;
-    description: string;
-};
-
-type CodeSnippetTarget = {
-    key: string;
-    title: string;
-    clients: CodeSnippetClient[];
-};
-
 export class CodeSnippetController {
-    private readonly _availableTargets: CodeSnippetTarget[] = HTTPSnippet.availableTargets();
     private readonly clipboard: Clipboard;
     private _webview: CodeSnippetWebview;
 

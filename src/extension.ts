@@ -17,7 +17,6 @@ import { RequestVariableCompletionItemProvider } from "./providers/requestVariab
 import { RequestVariableDefinitionProvider } from './providers/requestVariableDefinitionProvider';
 import { RequestVariableHoverProvider } from './providers/requestVariableHoverProvider';
 import { ConfigurationDependentRegistration } from './utils/dependentRegistration';
-import { UserDataManager } from './utils/userDataManager';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed

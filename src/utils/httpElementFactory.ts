@@ -5,7 +5,6 @@ import { ElementType, HttpElement } from '../models/httpElement';
 import { EnvironmentVariableProvider } from './httpVariableProviders/environmentVariableProvider';
 import { FileVariableProvider } from './httpVariableProviders/fileVariableProvider';
 import { RequestVariableProvider } from './httpVariableProviders/requestVariableProvider';
-import { UserDataManager } from './userDataManager';
 
 export class HttpElementFactory {
     public static async getHttpElements(document: TextDocument, line: string): Promise<HttpElement[]> {

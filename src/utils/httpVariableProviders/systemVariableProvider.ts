@@ -1,12 +1,10 @@
 import * as dotenv from 'dotenv';
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
 import * as path from 'path';
-import { Clipboard, commands, env, QuickPickItem, QuickPickOptions, TextDocument, Uri, window } from 'vscode';
+import { TextDocument } from 'vscode';
 import * as Constants from '../../common/constants';
-import { HttpRequest } from '../../models/httpRequest';
 import { ResolveErrorMessage, ResolveWarningMessage } from '../../models/httpVariableResolveResult';
 import { VariableType } from '../../models/variableType';
-import { HttpClient } from '../httpClient';
 import { EnvironmentVariableProvider } from './environmentVariableProvider';
 import { HttpVariable, HttpVariableContext, HttpVariableProvider } from './httpVariableProvider';
 
@@ -111,7 +109,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private registerDotenvVariable() {
         this.resolveFuncs.set(Constants.DotenvVariableName, async (name, document) => {
             let folderPath = path.dirname(document.fileName);
-            while (!await fs.pathExists(path.join(folderPath, '.env'))) {
+            while (!await fs.existsSync(path.join(folderPath, '.env'))) {
                 folderPath = path.join(folderPath, '..');
                 if (folderPath === path.parse(process.cwd()).root) {
                     return { warning: ResolveWarningMessage.DotenvFileNotFound };
@@ -120,7 +118,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
             const absolutePath = path.join(folderPath, '.env');
             const groups = this.dotenvRegex.exec(name);
             if (groups !== null && groups.length === 3) {
-                const parsed = dotenv.parse(await fs.readFile(absolutePath));
+                const parsed = dotenv.parse(await fs.readFileSync(absolutePath));
                 const [, refToggle, key] = groups;
                 let dotEnvVarName = key;
                 if (refToggle !== undefined) {

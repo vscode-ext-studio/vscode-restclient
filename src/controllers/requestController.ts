@@ -1,14 +1,13 @@
 import { ExtensionContext, Range, TextDocument, ViewColumn, window } from 'vscode';
 import Logger from '../logger';
 import { RestClientSettings } from '../models/configurationSettings';
-import { HistoricalHttpRequest, HttpRequest } from '../models/httpRequest';
+import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
 import { trace } from "../utils/decorator";
 import { HttpClient } from '../utils/httpClient';
 import { RequestState, RequestStatusEntry } from '../utils/requestStatusBarEntry';
 import { RequestVariableCache } from "../utils/requestVariableCache";
 import { Selector } from '../utils/selector';
-import { UserDataManager } from '../utils/userDataManager';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
 import { HttpResponseTextDocumentView } from '../views/httpResponseTextDocumentView';
 import { HttpResponseWebview } from '../views/httpResponseWebview';
@@ -19,7 +18,6 @@ export class RequestController {
     private _httpClient: HttpClient;
     private _webview: HttpResponseWebview;
     private _textDocumentView: HttpResponseTextDocumentView;
-    private _lastRequest?: HttpRequest;
     private _lastPendingRequest?: HttpRequest;
 
     public constructor(context: ExtensionContext) {
@@ -69,9 +67,6 @@ export class RequestController {
     private async runCore(httpRequest: HttpRequest, document?: TextDocument) {
         // clear status bar
         this._requestStatusEntry.update({ state: RequestState.Pending });
-
-        // set last request and last pending request
-        this._lastPendingRequest = this._lastRequest = httpRequest;
 
         // set http request
         try {

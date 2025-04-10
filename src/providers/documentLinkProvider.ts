@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
 import { CancellationToken, DocumentLink, DocumentLinkProvider, Position, Range, TextDocument, Uri } from 'vscode';

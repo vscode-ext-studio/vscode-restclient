@@ -1,17 +1,12 @@
-import * as fs from 'fs-extra';
 import * as iconv from 'iconv-lite';
-import * as path from 'path';
 import * as url from 'url';
-import { Uri, window } from 'vscode';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { RestClientSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { HttpResponse } from '../models/httpResponse';
 import { MimeUtility } from './mimeUtility';
-import { getHeader, hasHeader, removeHeader } from './misc';
+import { getHeader, removeHeader } from './misc';
 import { convertBufferToStream, convertStreamToBuffer } from './streamUtility';
-import { UserDataManager } from './userDataManager';
-import { getCurrentHttpFileName, getWorkspaceRootPath } from './workspaceUtility';
 
 import axios, { AxiosResponse } from 'axios';
 import { Agent } from 'https';
@@ -22,6 +17,7 @@ interface RequestOption {
     method: string;
     headers: RequestHeaders;
     body?: string | Buffer;
+    auth?: string;
     encoding?: null;
     decompress?: boolean;
     followRedirect?: boolean;
