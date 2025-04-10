@@ -1,7 +1,9 @@
 import { window } from 'vscode';
 import { MimeUtility } from './mimeUtility';
 import { isJSONString } from './misc';
-const pd = require('pretty-data').pd;
+import { PrettyData } from './pretty-data';
+
+const pd = new PrettyData();
 
 export class ResponseFormatUtility {
 

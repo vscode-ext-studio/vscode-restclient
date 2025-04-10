@@ -8,10 +8,10 @@
             "type": "npm",
             "script": "watch",
             "problemMatcher": {
-                "owner": "typescript",
-                "pattern":[
+                "owner": "esbuild",
+                "pattern": [
                     {
-                        "regexp": "\\[tsl\\] ERROR",
+                        "regexp": "\\[esbuild\\] ERROR",
                         "file": 1,
                         "location": 2,
                         "message": 3
@@ -19,8 +19,8 @@
                 ],
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "Compilation \\w+ starting…",
-                    "endsPattern": "Compilation\\s+finished"
+                    "beginsPattern": "Building...",
+                    "endsPattern": "build finished"
                 }
             },
             "isBackground": true,

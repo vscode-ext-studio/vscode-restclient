@@ -24,7 +24,7 @@
     "url": "https://github.com/Huachao/vscode-restclient.git"
   },
   "engines": {
-    "vscode": "^1.57.0"
+    "vscode": "^1.64.0"
   },
   "categories": [
     "Other",
@@ -357,21 +357,18 @@
     }
   },
   "scripts": {
-    "webpack": "webpack --mode development",
-    "build": "webpack --mode production",
-    "vscode:prepublish": "npm run build",
-    "watch": "webpack --mode development --watch --info-verbosity verbose"
+    "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --sourcemap --watch",
+    "build": "rm -rf dist && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --minify",
+    "vscode:prepublish": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^12.11.7",
-    "@types/vscode": "^1.57.0",
-    "ts-loader": "^5.3.2",
-    "typescript": "^3.7.3",
-    "webpack": "^4.26.0",
-    "webpack-cli": "^3.1.0"
+    "@types/vscode": "^1.64.0",
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.8.4",
     "combined-stream": "^1.0.5",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
@@ -380,7 +377,6 @@
     "https-proxy-agent": "^2.2.3",
     "jsonpath-plus": "^0.20.1",
     "mime-types": "^2.1.14",
-    "pretty-data": "^0.40.0",
     "yargs-parser": "~11.1.1"
   }
 }
