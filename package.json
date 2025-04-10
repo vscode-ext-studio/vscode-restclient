@@ -353,7 +353,7 @@
   },
   "scripts": {
     "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --sourcemap --watch",
-    "build": "rm -rf dist && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --minify",
+    "build": "rm -rf dist/* && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --minify",
     "vscode:prepublish": "npm run build"
   },
   "devDependencies": {
@@ -367,8 +367,6 @@
     "combined-stream": "^1.0.5",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
-    "http-proxy-agent": "^2.1.0",
-    "https-proxy-agent": "^2.2.3",
     "jsonpath-plus": "^0.20.1",
     "mime-types": "^2.1.14",
     "yargs-parser": "~11.1.1"

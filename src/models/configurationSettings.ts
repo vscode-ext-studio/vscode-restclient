@@ -11,8 +11,6 @@ interface IRestClientSettings {
     defaultHeaders: RequestHeaders;
     timeoutInMilliseconds: number;
     requestNameAsResponseTabTitle: boolean;
-    proxy?: string;
-    proxyStrictSSL: boolean;
     environmentVariables: { [key: string]: { [key: string]: string } };
     suppressResponseBodyContentTypeValidationWarning: boolean;
     previewOption: PreviewOption;
@@ -32,8 +30,6 @@ export class RestClientSettings implements IRestClientSettings {
     public defaultHeaders: RequestHeaders;
     public timeoutInMilliseconds: number;
     public requestNameAsResponseTabTitle: boolean;
-    public proxy?: string;
-    public proxyStrictSSL: boolean;
     public environmentVariables: { [key: string]: { [key: string]: string } };
     public suppressResponseBodyContentTypeValidationWarning: boolean;
     public previewOption: PreviewOption;
@@ -109,9 +105,6 @@ export class RestClientSettings implements IRestClientSettings {
         this.enableCustomVariableReferencesCodeLens = restClientSettings.get<boolean>('enableCustomVariableReferencesCodeLens', true);
         languages.setLanguageConfiguration('http', { brackets: this.addRequestBodyLineIndentationAroundBrackets ? this.brackets : [] });
 
-        const httpSettings = workspace.getConfiguration("http");
-        this.proxy = httpSettings.get<string>('proxy');
-        this.proxyStrictSSL = httpSettings.get<boolean>('proxyStrictSSL', false);
     }
 
     private parseColumn(value: string): ViewColumn {

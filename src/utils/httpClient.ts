@@ -141,24 +141,6 @@ export class HttpClient {
             }
         }
 
-        // set proxy
-        if (this._settings.proxy) {
-            const proxyEndpoint = url.parse(this._settings.proxy);
-            if (/^https?:$/.test(proxyEndpoint.protocol || '')) {
-                const proxyOptions = {
-                    host: proxyEndpoint.hostname,
-                    port: Number(proxyEndpoint.port),
-                    rejectUnauthorized: this._settings.proxyStrictSSL
-                };
-
-                const ctor = (httpRequest.url.startsWith('http:')
-                    ? await import('http-proxy-agent')
-                    : await import('https-proxy-agent')).default;
-
-                options.agent = new ctor(proxyOptions);
-            }
-        }
-
         return options;
     }
 
