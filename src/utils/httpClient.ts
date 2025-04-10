@@ -167,12 +167,8 @@ export class HttpClient {
             }
         }
 
-        // set certificate
-        const certificate = this.getRequestCertificate(httpRequest.url);
-        Object.assign(options, certificate);
-
         // set proxy
-        if (this._settings.proxy && !HttpClient.ignoreProxy(httpRequest.url, this._settings.excludeHostsForProxy)) {
+        if (this._settings.proxy) {
             const proxyEndpoint = url.parse(this._settings.proxy);
             if (/^https?:$/.test(proxyEndpoint.protocol || '')) {
                 const proxyOptions = {
@@ -237,89 +233,6 @@ export class HttpClient {
             const char = String.fromCharCode(parseInt(g, 16));
             return char === '"' ? '\\"' : char;
         });
-    }
-
-    private getRequestCertificate(requestUrl: string): Certificate | null {
-        const host = url.parse(requestUrl).host;
-        if (!host || !(host in this._settings.hostCertificates)) {
-            return null;
-        }
-
-        const { cert: certPath, key: keyPath, pfx: pfxPath, passphrase } = this._settings.hostCertificates[host];
-        const cert = this.resolveCertificate(certPath);
-        const key = this.resolveCertificate(keyPath);
-        const pfx = this.resolveCertificate(pfxPath);
-        return { cert, key, pfx, passphrase };
-    }
-
-    private static ignoreProxy(requestUrl: string, excludeHostsForProxy: string[]): Boolean {
-        if (!excludeHostsForProxy || excludeHostsForProxy.length === 0) {
-            return false;
-        }
-
-        const resolvedUrl = url.parse(requestUrl);
-        const hostName = resolvedUrl.hostname?.toLowerCase();
-        const port = resolvedUrl.port;
-        const excludeHostsProxyList = Array.from(new Set(excludeHostsForProxy.map(eh => eh.toLowerCase())));
-
-        for (const eh of excludeHostsProxyList) {
-            const urlParts = eh.split(":");
-            if (!port) {
-                // if no port specified in request url, host name must exactly match
-                if (urlParts.length === 1 && urlParts[0] === hostName) {
-                    return true;
-                }
-            } else {
-                // if port specified, match host without port or hostname:port exactly match
-                const [ph, pp] = urlParts;
-                if (ph === hostName && (!pp || pp === port)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private resolveCertificate(absoluteOrRelativePath: string | undefined): Buffer | undefined {
-        if (absoluteOrRelativePath === undefined) {
-            return undefined;
-        }
-
-        if (path.isAbsolute(absoluteOrRelativePath)) {
-            if (!fs.existsSync(absoluteOrRelativePath)) {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
-                return undefined;
-            } else {
-                return fs.readFileSync(absoluteOrRelativePath);
-            }
-        }
-
-        // the path should be relative path
-        const rootPath = getWorkspaceRootPath();
-        let absolutePath = '';
-        if (rootPath) {
-            absolutePath = path.join(Uri.parse(rootPath).fsPath, absoluteOrRelativePath);
-            if (fs.existsSync(absolutePath)) {
-                return fs.readFileSync(absolutePath);
-            } else {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
-                return undefined;
-            }
-        }
-
-        const currentFilePath = getCurrentHttpFileName();
-        if (!currentFilePath) {
-            return undefined;
-        }
-
-        absolutePath = path.join(path.dirname(currentFilePath), absoluteOrRelativePath);
-        if (fs.existsSync(absolutePath)) {
-            return fs.readFileSync(absolutePath);
-        } else {
-            window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
-            return undefined;
-        }
     }
 
     private static normalizeHeaderNames<T extends RequestHeaders | ResponseHeaders>(headers: T, rawHeaders: string[]): T {

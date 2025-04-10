@@ -33,18 +33,11 @@ export class MimeUtility {
         return new MimeType(type, subtype, charset);
     }
 
-    public static getExtension(contentTypeString: string | undefined, mimeAndFileExtensionMapping: { [key: string]: string }): string {
+    public static getExtension(contentTypeString: string | undefined): string {
         if (!contentTypeString) {
             return '';
         }
 
-        const { essence } = this.parse(contentTypeString);
-
-        // Check if user has custom mapping for this content type first
-        if (essence in mimeAndFileExtensionMapping) {
-            const ext = mimeAndFileExtensionMapping[essence];
-            return ext.replace(/^(\.)+/, '');
-        }
         return mime.extension(contentTypeString) || '';
     }
 

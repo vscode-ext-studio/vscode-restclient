@@ -56,11 +56,11 @@ export class HttpResponseWebview extends BaseWebview {
 
     public async render(response: HttpResponse, column: ViewColumn) {
         let panel: WebviewPanel;
-        if (this.settings.showResponseInDifferentTab || this.panels.length === 0) {
+        if (this.panels.length === 0) {
             panel = window.createWebviewPanel(
                 this.viewType,
                 this.getTitle(response),
-                { viewColumn: column, preserveFocus: !this.settings.previewResponsePanelTakeFocus },
+                { viewColumn: column, preserveFocus: true },
                 {
                     enableFindWidget: true,
                     enableScripts: true,
@@ -99,9 +99,9 @@ export class HttpResponseWebview extends BaseWebview {
 
         panel.webview.html = this.getHtmlForWebview(panel, response);
 
-        this.setPreviewActiveContext(this.settings.previewResponsePanelTakeFocus);
+        this.setPreviewActiveContext(false);
 
-        panel.reveal(column, !this.settings.previewResponsePanelTakeFocus);
+        panel.reveal(column, true);
 
         this.panelResponses.set(panel, response);
         this.activePanel = panel;
@@ -144,7 +144,7 @@ export class HttpResponseWebview extends BaseWebview {
     @trace('Save Response Body')
     private async saveBody() {
         if (this.activeResponse) {
-            const extension = MimeUtility.getExtension(this.activeResponse.contentType, this.settings.mimeAndFileExtensionMapping);
+            const extension = MimeUtility.getExtension(this.activeResponse.contentType);
             const fileName = !extension ? `Response-${Date.now()}` : `Response-${Date.now()}.${extension}`;
             const defaultFilePath = UserDataManager.getResponseBodySaveFilePath(fileName);
             try {
@@ -279,13 +279,6 @@ ${HttpResponseWebview.formatHeaders(response.headers)}`;
     private getSettingsOverrideStyles(width: number): string {
         return [
             '<style>',
-            (this.settings.fontFamily || this.settings.fontSize || this.settings.fontWeight ? [
-                'code {',
-                this.settings.fontFamily ? `font-family: ${this.settings.fontFamily};` : '',
-                this.settings.fontSize ? `font-size: ${this.settings.fontSize}px;` : '',
-                this.settings.fontWeight ? `font-weight: ${this.settings.fontWeight};` : '',
-                '}',
-            ] : []).join('\n'),
             'code .line {',
             `padding-left: calc(${width}ch + 20px );`,
             '}',

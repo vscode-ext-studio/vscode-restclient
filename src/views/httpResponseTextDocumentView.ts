@@ -26,14 +26,14 @@ export class HttpResponseTextDocumentView {
         const content = this.getTextDocumentContent(response);
         const language = this.getVSCodeDocumentLanguageId(response);
         let document: TextDocument;
-        if (this.settings.showResponseInDifferentTab || this.documents.length === 0) {
+        if (this.documents.length === 0) {
             document = await workspace.openTextDocument({ language, content });
             this.documents.push(document);
-            await window.showTextDocument(document, { viewColumn: column, preserveFocus: !this.settings.previewResponsePanelTakeFocus, preview: false });
+            await window.showTextDocument(document, { viewColumn: column, preserveFocus: true, preview: false });
         } else {
             document = this.documents[this.documents.length - 1];
             languages.setTextDocumentLanguage(document, language);
-            const editor = await window.showTextDocument(document, { viewColumn: column, preserveFocus: !this.settings.previewResponsePanelTakeFocus, preview: false });
+            const editor = await window.showTextDocument(document, { viewColumn: column, preserveFocus: true, preview: false });
             editor.edit(edit => {
                 const startPosition = new Position(0, 0);
                 const endPosition = document.lineAt(document.lineCount - 1).range.end;

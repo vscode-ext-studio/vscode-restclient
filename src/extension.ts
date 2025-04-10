@@ -56,10 +56,7 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector, new RequestVariableCompletionItemProvider(), '.'));
     context.subscriptions.push(languages.registerHoverProvider(documentSelector, new EnvironmentOrFileVariableHoverProvider()));
     context.subscriptions.push(languages.registerHoverProvider(documentSelector, new RequestVariableHoverProvider()));
-    context.subscriptions.push(
-        new ConfigurationDependentRegistration(
-            () => languages.registerCodeLensProvider(documentSelector, new HttpCodeLensProvider()),
-            s => s.enableSendRequestCodeLens));
+    context.subscriptions.push(languages.registerCodeLensProvider(documentSelector, new HttpCodeLensProvider()));
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
             () => languages.registerCodeLensProvider(documentSelector, new FileVariableReferencesCodeLensProvider()),
