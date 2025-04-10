@@ -49,7 +49,14 @@ export class HttpResponseTextDocumentView {
 
     private async saveBody() {
         if (this.currentResponse) {
-            const extension = MimeUtility.getExtension(this.currentResponse.contentType);
+            let extension = MimeUtility.getExtension(this.currentResponse.contentType);
+            if (!extension) {
+                const url = this.currentResponse.request.url;
+                const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+                if (match) {
+                    extension = match[1];
+                }
+            }
             const fileName = !extension ? `Response-${Date.now()}` : `Response-${Date.now()}.${extension}`;
             const defaultFilePath = UserDataManager.getResponseBodySaveFilePath(fileName);
             try {

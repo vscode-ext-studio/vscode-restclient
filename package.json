@@ -352,8 +352,8 @@
     }
   },
   "scripts": {
-    "watch": "esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --sourcemap --watch",
-    "build": "rm -rf dist/* && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js --minify",
+    "watch": "node esbuild.config.js --watch",
+    "build": "rm -rf dist/* && node esbuild.config.js",
     "vscode:prepublish": "npm run build"
   },
   "devDependencies": {
@@ -363,12 +363,11 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "axios": "^1.8.4",
+    "axios": "^0.30.0",
     "combined-stream": "^1.0.5",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
     "jsonpath-plus": "^0.20.1",
-    "mime-types": "^2.1.14",
     "yargs-parser": "~11.1.1"
   }
 }
