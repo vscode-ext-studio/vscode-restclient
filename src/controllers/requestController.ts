@@ -9,18 +9,15 @@ import { RequestVariableCache } from "../utils/requestVariableCache";
 import { Selector } from '../utils/selector';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
 import { HttpResponseTextDocumentView } from '../views/httpResponseTextDocumentView';
-import { HttpResponseWebview } from '../views/httpResponseWebview';
 
 export class RequestController {
     private readonly _restClientSettings: RestClientSettings = RestClientSettings.Instance;
     private _httpClient: HttpClient;
-    private _webview: HttpResponseWebview;
     private _textDocumentView: HttpResponseTextDocumentView;
     private _lastPendingRequest?: HttpRequest;
 
     public constructor(context: ExtensionContext) {
         this._httpClient = new HttpClient();
-        this._webview = new HttpResponseWebview(context);
         this._textDocumentView = new HttpResponseTextDocumentView();
     }
 
@@ -80,11 +77,7 @@ export class RequestController {
                 const previewColumn = this._restClientSettings.previewColumn === ViewColumn.Active
                     ? activeColumn
                     : ((activeColumn as number) + 1) as ViewColumn;
-                if (this._restClientSettings.previewResponseInUntitledDocument) {
-                    this._textDocumentView.render(response, previewColumn);
-                } else if (previewColumn) {
-                    this._webview.render(response, previewColumn);
-                }
+                this._textDocumentView.render(response, previewColumn);
             } catch (reason) {
                 Logger.error('Unable to preview response:', reason);
                 window.showErrorMessage(reason);
@@ -113,6 +106,5 @@ export class RequestController {
     }
 
     public dispose() {
-        this._webview.dispose();
     }
 }

@@ -59,6 +59,7 @@
         ],
         "extensions": [
           ".http",
+          ".http",
           ".rest"
         ],
         "firstLine": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)\\s+(.*?)HTTP/[0-9\\.]+$",
@@ -120,11 +121,11 @@
       "commandPalette": [
         {
           "command": "rest-client.save-response-body",
-          "when": "httpResponsePreviewFocus"
+          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
         },
         {
           "command": "rest-client.copy-response-body",
-          "when": "httpResponsePreviewFocus"
+          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
         },
         {
           "command": "rest-client.copy-codesnippet",
@@ -133,12 +134,12 @@
       ],
       "editor/title": [
         {
-          "when": "httpResponsePreviewFocus",
+          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
           "command": "rest-client.save-response-body",
           "group": "navigation@2"
         },
         {
-          "when": "httpResponsePreviewFocus",
+          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
           "command": "rest-client.copy-response-body",
           "group": "navigation@3"
         },
@@ -233,12 +234,6 @@
               }
             ]
           }
-        },
-        "rest-client.previewResponseInUntitledDocument": {
-          "type": "boolean",
-          "default": false,
-          "scope": "resource",
-          "description": "Preview response in untitled document if set to true, otherwise displayed in html view"
         },
         "rest-client.suppressResponseBodyContentTypeValidationWarning": {
           "type": "boolean",
@@ -372,7 +367,6 @@
     "combined-stream": "^1.0.5",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
-    "highlight.js": "^10.4.1",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.3",
     "jsonpath-plus": "^0.20.1",

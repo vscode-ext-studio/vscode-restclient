@@ -14,7 +14,6 @@ interface IRestClientSettings {
     proxy?: string;
     proxyStrictSSL: boolean;
     environmentVariables: { [key: string]: { [key: string]: string } };
-    previewResponseInUntitledDocument: boolean;
     suppressResponseBodyContentTypeValidationWarning: boolean;
     previewOption: PreviewOption;
     disableHighlightResonseBodyForLargeResponse: boolean;
@@ -36,7 +35,6 @@ export class RestClientSettings implements IRestClientSettings {
     public proxy?: string;
     public proxyStrictSSL: boolean;
     public environmentVariables: { [key: string]: { [key: string]: string } };
-    public previewResponseInUntitledDocument: boolean;
     public suppressResponseBodyContentTypeValidationWarning: boolean;
     public previewOption: PreviewOption;
     public disableHighlightResonseBodyForLargeResponse: boolean;
@@ -98,7 +96,6 @@ export class RestClientSettings implements IRestClientSettings {
 
         this.environmentVariables = restClientSettings.get<{ [key: string]: { [key: string]: string } }>("environmentVariables", {});
 
-        this.previewResponseInUntitledDocument = restClientSettings.get<boolean>("previewResponseInUntitledDocument", false);
         this.previewColumn = this.parseColumn(restClientSettings.get<string>("previewColumn", "two"));
         this.disableHighlightResonseBodyForLargeResponse = restClientSettings.get<boolean>("disableHighlightResonseBodyForLargeResponse", true);
         this.disableAddingHrefLinkForLargeResponse = restClientSettings.get<boolean>("disableAddingHrefLinkForLargeResponse", true);
