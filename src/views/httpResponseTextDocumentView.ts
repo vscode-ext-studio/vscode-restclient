@@ -26,8 +26,8 @@ export class HttpResponseTextDocumentView {
         this.responseUri = Uri.parse(`${this.scheme}://response/Response`);
 
         // 注册命令
-        commands.registerCommand('rest-client.copy-response-body', this.copyBody, this);
-        commands.registerCommand('rest-client.save-response-body', this.saveBody, this);
+        commands.registerCommand('vscode-office.copy-response-body', this.copyBody, this);
+        commands.registerCommand('vscode-office.save-response-body', this.saveBody, this);
     }
 
     public async render(response: HttpResponse, column?: ViewColumn) {

@@ -22,13 +22,13 @@ import { ConfigurationDependentRegistration } from './utils/dependentRegistratio
 // your extension is activated the very first time the command is executed
 export async function activate(context: ExtensionContext) {
     const requestController = new RequestController(context);
-    const codeSnippetController = new CodeSnippetController(context);
+    const codeSnippetController = new CodeSnippetController();
     context.subscriptions.push(requestController);
     context.subscriptions.push(codeSnippetController);
-    context.subscriptions.push(commands.registerCommand('rest-client.request', ((document: TextDocument, range: Range) => requestController.run(range))));
-    context.subscriptions.push(commands.registerCommand('rest-client.cancel-request', () => requestController.cancel()));
-    context.subscriptions.push(commands.registerCommand('rest-client.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
-    context.subscriptions.push(commands.registerCommand('rest-client._openDocumentLink', args => {
+    context.subscriptions.push(commands.registerCommand('vscode-office.request', ((document: TextDocument, range: Range) => requestController.run(range))));
+    context.subscriptions.push(commands.registerCommand('vscode-office.cancel-request', () => requestController.cancel()));
+    context.subscriptions.push(commands.registerCommand('vscode-office.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
+    context.subscriptions.push(commands.registerCommand('vscode-office._openDocumentLink', args => {
         workspace.openTextDocument(Uri.parse(args.path)).then(window.showTextDocument, error => {
             window.showErrorMessage(error.message);
         });

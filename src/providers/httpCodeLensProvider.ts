@@ -13,7 +13,7 @@ export class HttpCodeLensProvider implements CodeLensProvider {
             const cmd: Command = {
                 arguments: [document, range],
                 title: 'Send',
-                command: 'rest-client.request'
+                command: 'vscode-office.request'
             };
             blocks.push(new CodeLens(range, cmd));
         }

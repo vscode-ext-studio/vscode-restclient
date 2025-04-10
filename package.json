@@ -39,12 +39,12 @@
     "multi-root ready"
   ],
   "activationEvents": [
-    "onCommand:rest-client.request",
-    "onCommand:rest-client.save-response-body",
-    "onCommand:rest-client.copy-response-body",
-    "onCommand:rest-client.cancel-request",
-    "onCommand:rest-client.copy-codesnippet",
-    "onCommand:rest-client.copy-request-as-curl",
+    "onCommand:vscode-office.request",
+    "onCommand:vscode-office.save-response-body",
+    "onCommand:vscode-office.copy-response-body",
+    "onCommand:vscode-office.cancel-request",
+    "onCommand:vscode-office.copy-codesnippet",
+    "onCommand:vscode-office.copy-request-as-curl",
     "onLanguage:http"
   ],
   "main": "./dist/extension",
@@ -81,29 +81,29 @@
     ],
     "commands": [
       {
-        "command": "rest-client.request",
+        "command": "vscode-office.request",
         "title": "Send Request",
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.cancel-request",
+        "command": "vscode-office.cancel-request",
         "title": "Cancel Request",
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.save-response-body",
+        "command": "vscode-office.save-response-body",
         "title": "Save Response Body",
         "icon": "$(save)",
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.copy-response-body",
+        "command": "vscode-office.copy-response-body",
         "title": "Copy Response Body",
         "icon": "$(copy)",
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.copy-codesnippet",
+        "command": "vscode-office.copy-codesnippet",
         "title": "Copy Code Snippet",
         "icon": {
           "light": "./images/copy.svg",
@@ -112,7 +112,7 @@
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.copy-request-as-curl",
+        "command": "vscode-office.copy-request-as-curl",
         "title": "Copy Request As cURL",
         "category": "Rest Client"
       }
@@ -120,43 +120,43 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "rest-client.save-response-body",
+          "command": "vscode-office.save-response-body",
           "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
         },
         {
-          "command": "rest-client.copy-response-body",
+          "command": "vscode-office.copy-response-body",
           "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
         },
         {
-          "command": "rest-client.copy-codesnippet",
+          "command": "vscode-office.copy-codesnippet",
           "when": "codeSnippetPreviewFocus"
         }
       ],
       "editor/title": [
         {
           "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
-          "command": "rest-client.save-response-body",
+          "command": "vscode-office.save-response-body",
           "group": "navigation@2"
         },
         {
           "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
-          "command": "rest-client.copy-response-body",
+          "command": "vscode-office.copy-response-body",
           "group": "navigation@3"
         },
         {
           "when": "codeSnippetPreviewFocus",
-          "command": "rest-client.copy-codesnippet",
+          "command": "vscode-office.copy-codesnippet",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "rest-client.request",
+          "command": "vscode-office.request",
           "when": "editorTextFocus && editorLangId == http",
           "group": "rest-client@1"
         },
         {
-          "command": "rest-client.copy-request-as-curl",
+          "command": "vscode-office.copy-request-as-curl",
           "when": "editorTextFocus && editorLangId == http",
           "group": "rest-client@3"
         }
@@ -164,25 +164,25 @@
     },
     "keybindings": [
       {
-        "command": "rest-client.request",
+        "command": "vscode-office.request",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "rest-client.request",
+        "command": "vscode-office.request",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       },
       {
-        "command": "rest-client.cancel-request",
+        "command": "vscode-office.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "rest-client.cancel-request",
+        "command": "vscode-office.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
@@ -192,25 +192,25 @@
       "type": "object",
       "title": "REST Client",
       "properties": {
-        "rest-client.followredirect": {
+        "vscode-office.followredirect": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Follow HTTP 3xx responses as redirects."
         },
-        "rest-client.timeoutinmilliseconds": {
+        "vscode-office.timeoutinmilliseconds": {
           "type": "integer",
           "default": 0,
           "scope": "resource",
           "description": "Timeout in milliseconds. 0 for infinity"
         },
-        "rest-client.requestNameAsResponseTabTitle": {
+        "vscode-office.requestNameAsResponseTabTitle": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Show request name as the response tab title"
         },
-        "rest-client.environmentVariables": {
+        "vscode-office.environmentVariables": {
           "type": "object",
           "default": {
             "$shared": {}
@@ -235,13 +235,13 @@
             ]
           }
         },
-        "rest-client.suppressResponseBodyContentTypeValidationWarning": {
+        "vscode-office.suppressResponseBodyContentTypeValidationWarning": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Suppress response body content type validation"
         },
-        "rest-client.previewOption": {
+        "vscode-office.previewOption": {
           "type": "string",
           "enum": [
             "full",
@@ -259,27 +259,27 @@
           "scope": "resource",
           "description": "Response preview output option"
         },
-        "rest-client.disableHighlightResonseBodyForLargeResponse": {
+        "vscode-office.disableHighlightResonseBodyForLargeResponse": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `rest-client.largeResponseSizeLimitInMB`"
+          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `vscode-office.largeResponseSizeLimitInMB`"
         },
-        "rest-client.disableAddingHrefLinkForLargeResponse": {
+        "vscode-office.disableAddingHrefLinkForLargeResponse": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `rest-client.largeResponseSizeLimitInMB`"
+          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `vscode-office.largeResponseSizeLimitInMB`"
         },
-        "rest-client.largeResponseBodySizeLimitInMB": {
+        "vscode-office.largeResponseBodySizeLimitInMB": {
           "type": "number",
           "default": 5,
           "minimum": 0,
           "exclusiveMinimum": true,
           "scope": "resource",
-          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `rest-client.disableHighlightResonseBodyForLargeResponse` and/or `rest-client.disableAddingHrefLinkForLargeResponse` is set to true"
+          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `vscode-office.disableHighlightResonseBodyForLargeResponse` and/or `vscode-office.disableAddingHrefLinkForLargeResponse` is set to true"
         },
-        "rest-client.previewColumn": {
+        "vscode-office.previewColumn": {
           "type": "string",
           "enum": [
             "current",
@@ -293,7 +293,7 @@
           "scope": "resource",
           "description": "Response preview column option"
         },
-        "rest-client.formParamEncodingStrategy": {
+        "vscode-office.formParamEncodingStrategy": {
           "type": "string",
           "enum": [
             "automatic",
@@ -309,19 +309,19 @@
           "scope": "resource",
           "markdownDescription": "Form param encoding strategy for request body of `x-www-form-urlencoded`."
         },
-        "rest-client.addRequestBodyLineIndentationAroundBrackets": {
+        "vscode-office.addRequestBodyLineIndentationAroundBrackets": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "markdownDescription": "Add line indentation around brackets(`{}`, `<>`, `[]`) in request body when pressing enter."
         },
-        "rest-client.decodeEscapedUnicodeCharacters": {
+        "vscode-office.decodeEscapedUnicodeCharacters": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Decode escaped unicode characters in response body."
         },
-        "rest-client.logLevel": {
+        "vscode-office.logLevel": {
           "type": "string",
           "enum": [
             "error",
@@ -333,7 +333,7 @@
           "scope": "resource",
           "description": "The verbosity of logging in the REST output panel"
         },
-        "rest-client.enableCustomVariableReferencesCodeLens": {
+        "vscode-office.enableCustomVariableReferencesCodeLens": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
