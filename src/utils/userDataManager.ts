@@ -33,68 +33,11 @@ function getConfigPath(): string {
 
 export class UserDataManager {
 
-    private static readonly historyItemsMaxCount = 50;
-
-    private static readonly cachePath: string = getCachePath();
-    private static readonly configPath: string = getConfigPath();
-
-    public static get cookieFilePath() {
-        return path.join(this.cachePath, 'cookie.json');
-    }
-
-    private static get historyFilePath() {
-        return path.join(this.cachePath, 'history.json');
-    }
-
-    private static get environmentFilePath() {
-        return path.join(this.configPath, 'environment.json');
-    }
-
-    private static get responseSaveFolderPath() {
-        return path.join(this.cachePath, 'responses/raw');
-    }
-
-    private static get responseBodySaveFolderPath() {
-        return path.join(this.cachePath, 'responses/body');
-    }
-
-    public static async initialize(): Promise<void> {
-        await Promise.all([
-            fs.ensureFile(this.historyFilePath),
-            fs.ensureFile(this.cookieFilePath),
-            fs.ensureFile(this.environmentFilePath),
-            fs.ensureDir(this.responseSaveFolderPath),
-            fs.ensureDir(this.responseBodySaveFolderPath)
-        ]);
-    }
-
-    public static async addToRequestHistory(request: HistoricalHttpRequest) {
-        const requests = await JsonFileUtility.deserializeFromFile<HistoricalHttpRequest[]>(this.historyFilePath, []);
-        requests.unshift(request);
-        await JsonFileUtility.serializeToFile(this.historyFilePath, requests.slice(0, this.historyItemsMaxCount));
-    }
-
-    public static clearRequestHistory(): Promise<void> {
-        return JsonFileUtility.serializeToFile(this.historyFilePath, []);
-    }
-
-    public static getRequestHistory(): Promise<HistoricalHttpRequest[]> {
-        return JsonFileUtility.deserializeFromFile(this.historyFilePath, []);
-    }
-
-    public static getEnvironment() {
-        return JsonFileUtility.deserializeFromFile(this.environmentFilePath);
-    }
-
-    public static setEnvironment(item: unknown) {
-        return JsonFileUtility.serializeToFile(this.environmentFilePath, item);
-    }
-
     public static getResponseSaveFilePath(fileName: string) {
-        return path.join(this.responseSaveFolderPath, fileName);
+        return path.join(os.homedir(), 'Downloads', fileName);
     }
 
     public static getResponseBodySaveFilePath(fileName: string) {
-        return path.join(this.responseBodySaveFolderPath, fileName);
+        return path.join(os.homedir(), 'Downloads', fileName);
     }
 }

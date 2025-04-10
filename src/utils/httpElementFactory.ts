@@ -87,29 +87,11 @@ export class HttpElementFactory {
 
         // add global variables
         originalElements.push(new HttpElement(
-            Constants.GuidVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.GuidVariableDescription,
-            new SnippetString(`{{$\${name:${Constants.GuidVariableName.slice(1)}}}}`)));
-        originalElements.push(new HttpElement(
             Constants.TimeStampVariableName,
             ElementType.SystemVariable,
             null,
             Constants.TimeStampVariableDescription,
             new SnippetString(`{{$\${name:${Constants.TimeStampVariableName.slice(1)}}}}`)));
-        originalElements.push(new HttpElement(
-            Constants.DateTimeVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.DateTimeVariableNameDescription,
-            new SnippetString(`{{$\${name:${Constants.DateTimeVariableName.slice(1)}} \${1|rfc1123,iso8601|}}}`)));
-        originalElements.push(new HttpElement(
-            Constants.LocalDateTimeVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.LocalDateTimeVariableNameDescription,
-            new SnippetString(`{{$\${name:${Constants.LocalDateTimeVariableName.slice(1)}} \${1|rfc1123,iso8601|}}}`)));
         originalElements.push(new HttpElement(
             Constants.RandomIntVariableName,
             ElementType.SystemVariable,
@@ -130,18 +112,6 @@ export class HttpElementFactory {
             Constants.DotenvDescription,
             new SnippetString(`{{$\${name:${Constants.DotenvVariableName.slice(1)}} \${2:.env variable name}}}`)
         ));
-        originalElements.push(new HttpElement(
-            Constants.AzureActiveDirectoryVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.AzureActiveDirectoryDescription,
-            new SnippetString(`{{$\${name:${Constants.AzureActiveDirectoryVariableName.slice(1)}}}}`)));
-        originalElements.push(new HttpElement(
-            Constants.AzureActiveDirectoryV2TokenVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.AzureActiveDirectoryV2TokenDescription,
-            new SnippetString(`{{$\${name:${Constants.AzureActiveDirectoryV2TokenVariableName.slice(1)}}}}`)));
 
         // add environment custom variables
         const environmentVariables = await EnvironmentVariableProvider.Instance.getAll();
@@ -181,8 +151,7 @@ export class HttpElementFactory {
         }
 
         // add urls from history
-        const historyItems = await UserDataManager.getRequestHistory();
-        const distinctRequestUrls = new Set(historyItems.map(item => item.url));
+        const distinctRequestUrls = new Set<string>();
         distinctRequestUrls.forEach(requestUrl => {
             const protocol = url.parse(requestUrl).protocol;
             if (!protocol) {

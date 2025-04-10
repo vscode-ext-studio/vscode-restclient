@@ -1,5 +1,4 @@
 import * as Constants from '../../common/constants';
-import { EnvironmentController } from '../../controllers/environmentController';
 import { RestClientSettings } from '../../models/configurationSettings';
 import { ResolveErrorMessage } from '../../models/httpVariableResolveResult';
 import { VariableType } from '../../models/variableType';
@@ -39,30 +38,11 @@ export class EnvironmentVariableProvider implements HttpVariableProvider {
 
     public async getAll(): Promise<HttpVariable[]> {
         const variables = await this.getAvailableVariables();
-        return Object.keys(variables).map(key => ({ name: key, value: variables[key]}));
+        return Object.keys(variables).map(key => ({ name: key, value: variables[key] }));
     }
 
     private async getAvailableVariables(): Promise<{ [key: string]: string }> {
-        let { name: environmentName } = await EnvironmentController.getCurrentEnvironment();
-        if (environmentName === Constants.NoEnvironmentSelectedName) {
-            environmentName = EnvironmentController.sharedEnvironmentName;
-        }
-        const variables = this._settings.environmentVariables;
-        const currentEnvironmentVariables = variables[environmentName];
-        const sharedEnvironmentVariables = variables[EnvironmentController.sharedEnvironmentName];
-        this.mapEnvironmentVariables(currentEnvironmentVariables, sharedEnvironmentVariables);
-        return {...sharedEnvironmentVariables, ...currentEnvironmentVariables};
+        return {};
     }
 
-    private mapEnvironmentVariables(current: { [key: string]: string }, shared: { [key: string]: string }) {
-        for (const [key, value] of Object.entries(current)) {
-            const variableRegex = /\{{2}\$shared (.+?)\}{2}/;
-            const match = variableRegex.exec(value);
-            if (!match) {
-                continue;
-            }
-            const referenceKey = match[1].trim();
-            current[key] = shared[referenceKey];
-        }
-    }
 }

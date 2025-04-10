@@ -59,15 +59,6 @@ export class RequestController {
         await this.runCore(httpRequest, document);
     }
 
-    @trace('Rerun Request')
-    public async rerun() {
-        if (!this._lastRequest) {
-            return;
-        }
-
-        await this.runCore(this._lastRequest);
-    }
-
     @trace('Cancel Request')
     public async cancel() {
         this._lastPendingRequest?.cancel();
@@ -112,8 +103,6 @@ export class RequestController {
                 window.showErrorMessage(reason);
             }
 
-            // persist to history json file
-            await UserDataManager.addToRequestHistory(HistoricalHttpRequest.convertFromHttpRequest(httpRequest));
         } catch (error) {
             // check cancel
             if (httpRequest.isCancelled) {

@@ -40,20 +40,11 @@
   ],
   "activationEvents": [
     "onCommand:rest-client.request",
-    "onCommand:rest-client.history",
-    "onCommand:rest-client.clear-history",
-    "onCommand:rest-client.save-response",
     "onCommand:rest-client.save-response-body",
     "onCommand:rest-client.copy-response-body",
-    "onCommand:rest-client.switch-environment",
-    "onCommand:rest-client.clear-aad-token-cache",
     "onCommand:rest-client.cancel-request",
-    "onCommand:rest-client.rerun-last-request",
-    "onCommand:rest-client.generate-codesnippet",
     "onCommand:rest-client.copy-codesnippet",
     "onCommand:rest-client.copy-request-as-curl",
-    "onCommand:rest-client.fold-response",
-    "onCommand:rest-client.unfold-response",
     "onLanguage:http"
   ],
   "main": "./dist/extension",
@@ -94,60 +85,20 @@
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.rerun-last-request",
-        "title": "Rerun Last Request",
-        "category": "Rest Client"
-      },
-      {
         "command": "rest-client.cancel-request",
         "title": "Cancel Request",
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.switch-environment",
-        "title": "Switch Environment",
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.history",
-        "title": "View Request History",
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.clear-history",
-        "title": "Clear Request History",
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.save-response",
-        "title": "Save Full Response",
-        "icon": {
-          "light": "./images/save.svg",
-          "dark": "./images/save-inverse.svg"
-        },
-        "category": "Rest Client"
-      },
-      {
         "command": "rest-client.save-response-body",
         "title": "Save Response Body",
-        "icon": {
-          "light": "./images/save-body.svg",
-          "dark": "./images/save-body-inverse.svg"
-        },
+        "icon": "$(save)",
         "category": "Rest Client"
       },
       {
         "command": "rest-client.copy-response-body",
         "title": "Copy Response Body",
-        "icon": {
-          "light": "./images/copy.svg",
-          "dark": "./images/copy-inverse.svg"
-        },
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.generate-codesnippet",
-        "title": "Generate Code Snippet",
+        "icon": "$(copy)",
         "category": "Rest Client"
       },
       {
@@ -163,37 +114,10 @@
         "command": "rest-client.copy-request-as-curl",
         "title": "Copy Request As cURL",
         "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.clear-aad-token-cache",
-        "title": "Clear Azure AD Token Cache",
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.fold-response",
-        "title": "Fold Response",
-        "category": "Rest Client"
-      },
-      {
-        "command": "rest-client.unfold-response",
-        "title": "Unfold Response",
-        "category": "Rest Client"
       }
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "rest-client.fold-response",
-          "when": "httpResponsePreviewFocus"
-        },
-        {
-          "command": "rest-client.unfold-response",
-          "when": "httpResponsePreviewFocus"
-        },
-        {
-          "command": "rest-client.save-response",
-          "when": "httpResponsePreviewFocus"
-        },
         {
           "command": "rest-client.save-response-body",
           "when": "httpResponsePreviewFocus"
@@ -210,11 +134,6 @@
       "editor/title": [
         {
           "when": "httpResponsePreviewFocus",
-          "command": "rest-client.save-response",
-          "group": "navigation@1"
-        },
-        {
-          "when": "httpResponsePreviewFocus",
           "command": "rest-client.save-response-body",
           "group": "navigation@2"
         },
@@ -222,16 +141,6 @@
           "when": "httpResponsePreviewFocus",
           "command": "rest-client.copy-response-body",
           "group": "navigation@3"
-        },
-        {
-          "when": "httpResponsePreviewFocus",
-          "command": "rest-client.fold-response",
-          "group": "1_rest-client@1"
-        },
-        {
-          "when": "httpResponsePreviewFocus",
-          "command": "rest-client.unfold-response",
-          "group": "1_rest-client@2"
         },
         {
           "when": "codeSnippetPreviewFocus",
@@ -244,11 +153,6 @@
           "command": "rest-client.request",
           "when": "editorTextFocus && editorLangId == http",
           "group": "rest-client@1"
-        },
-        {
-          "command": "rest-client.generate-codesnippet",
-          "when": "editorTextFocus && editorLangId == http",
-          "group": "rest-client@2"
         },
         {
           "command": "rest-client.copy-request-as-curl",
@@ -271,24 +175,6 @@
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       },
       {
-        "command": "rest-client.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "rest-client.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      },
-      {
-        "command": "rest-client.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "httpResponsePreviewFocus"
-      },
-      {
         "command": "rest-client.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
@@ -298,28 +184,6 @@
         "command": "rest-client.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      },
-      {
-        "command": "rest-client.history",
-        "key": "ctrl+alt+h",
-        "mac": "cmd+alt+h"
-      },
-      {
-        "command": "rest-client.switch-environment",
-        "key": "ctrl+alt+e",
-        "mac": "cmd+alt+e"
-      },
-      {
-        "command": "rest-client.generate-codesnippet",
-        "key": "ctrl+alt+c",
-        "mac": "cmd+alt+c",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "rest-client.generate-codesnippet",
-        "key": "ctrl+alt+c",
-        "mac": "cmd+alt+c",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       }
     ],
@@ -344,12 +208,6 @@
           "default": false,
           "scope": "resource",
           "description": "Show request name as the response tab title"
-        },
-        "rest-client.rememberCookiesForSubsequentRequests": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "Remember cookies for subsequent requests"
         },
         "rest-client.environmentVariables": {
           "type": "object",
@@ -506,7 +364,6 @@
     "tslint": "tslint --project tsconfig.json"
   },
   "devDependencies": {
-    "@types/aws4": "^1.5.1",
     "@types/fs-extra": "^5.0.4",
     "@types/mocha": "^5.2.6",
     "@types/node": "^12.11.7",
@@ -522,7 +379,6 @@
     "axios": "^0.21.1",
     "code-highlight-linenums": "^0.2.1",
     "combined-stream": "^1.0.5",
-    "dayjs": "^1.8.20",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.1",
     "filesize": "^3.3.0",
@@ -536,9 +392,6 @@
     "jsonpath-plus": "^0.20.1",
     "mime-types": "^2.1.14",
     "pretty-data": "^0.40.0",
-    "tough-cookie": "^3.0.1",
-    "tough-cookie-file-store-bugfix": "Huachao/tough-cookie-file-store-bugfix",
-    "uuid": "^3.3.2",
     "xmldom": "^0.5.0",
     "xpath": "^0.0.27",
     "yargs-parser": "~11.1.1"

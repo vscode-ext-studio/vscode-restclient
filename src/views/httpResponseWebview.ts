@@ -46,11 +46,7 @@ export class HttpResponseWebview extends BaseWebview {
         // Init response webview map
         this.panelResponses = new Map<WebviewPanel, HttpResponse>();
 
-        this.context.subscriptions.push(commands.registerCommand('rest-client.fold-response', this.foldResponseBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.unfold-response', this.unfoldResponseBody, this));
-
         this.context.subscriptions.push(commands.registerCommand('rest-client.copy-response-body', this.copyBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.save-response', this.save, this));
         this.context.subscriptions.push(commands.registerCommand('rest-client.save-response-body', this.saveBody, this));
     }
 
@@ -111,33 +107,10 @@ export class HttpResponseWebview extends BaseWebview {
         disposeAll(this.panels);
     }
 
-    @trace('Fold Response')
-    private foldResponseBody() {
-        this.activePanel?.webview.postMessage({ 'command': 'foldAll' });
-    }
-
-    @trace('Unfold Response')
-    private unfoldResponseBody() {
-        this.activePanel?.webview.postMessage({ 'command': 'unfoldAll' });
-    }
-
     @trace('Copy Response Body')
     private async copyBody() {
         if (this.activeResponse) {
             await this.clipboard.writeText(this.activeResponse.body);
-        }
-    }
-
-    @trace('Save Response')
-    private async save() {
-        if (this.activeResponse) {
-            const fullResponse = this.getFullResponseString(this.activeResponse);
-            const defaultFilePath = UserDataManager.getResponseSaveFilePath(`Response-${Date.now()}.http`);
-            try {
-                await this.openSaveDialog(defaultFilePath, fullResponse);
-            } catch {
-                window.showErrorMessage('Failed to save latest response to disk.');
-            }
         }
     }
 

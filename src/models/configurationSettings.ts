@@ -13,7 +13,6 @@ interface IRestClientSettings {
     requestNameAsResponseTabTitle: boolean;
     proxy?: string;
     proxyStrictSSL: boolean;
-    rememberCookiesForSubsequentRequests: boolean;
     environmentVariables: { [key: string]: { [key: string]: string } };
     previewResponseInUntitledDocument: boolean;
     suppressResponseBodyContentTypeValidationWarning: boolean;
@@ -36,7 +35,6 @@ export class RestClientSettings implements IRestClientSettings {
     public requestNameAsResponseTabTitle: boolean;
     public proxy?: string;
     public proxyStrictSSL: boolean;
-    public rememberCookiesForSubsequentRequests: boolean;
     public environmentVariables: { [key: string]: { [key: string]: string } };
     public previewResponseInUntitledDocument: boolean;
     public suppressResponseBodyContentTypeValidationWarning: boolean;
@@ -93,7 +91,6 @@ export class RestClientSettings implements IRestClientSettings {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.62"
         };
         this.requestNameAsResponseTabTitle = restClientSettings.get<boolean>("requestNameAsResponseTabTitle", false);
-        this.rememberCookiesForSubsequentRequests = restClientSettings.get<boolean>("rememberCookiesForSubsequentRequests", true);
         this.timeoutInMilliseconds = restClientSettings.get<number>("timeoutinmilliseconds", 0);
         if (this.timeoutInMilliseconds < 0) {
             this.timeoutInMilliseconds = 0;
