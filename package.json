@@ -91,15 +91,15 @@
         "category": "Rest Client"
       },
       {
-        "command": "vscode-office.save-response-body",
-        "title": "Save Response Body",
-        "icon": "$(save)",
+        "command": "vscode-office.copy-response-body",
+        "title": "Copy Response",
+        "icon": "$(copy)",
         "category": "Rest Client"
       },
       {
-        "command": "vscode-office.copy-response-body",
-        "title": "Copy Response Body",
-        "icon": "$(copy)",
+        "command": "vscode-office.save-response-body",
+        "title": "Save Response",
+        "icon": "$(save)",
         "category": "Rest Client"
       },
       {
@@ -118,30 +118,16 @@
       }
     ],
     "menus": {
-      "commandPalette": [
-        {
-          "command": "vscode-office.save-response-body",
-          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
-        },
-        {
-          "command": "vscode-office.copy-response-body",
-          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response"
-        },
-        {
-          "command": "vscode-office.copy-codesnippet",
-          "when": "codeSnippetPreviewFocus"
-        }
-      ],
       "editor/title": [
+        {
+          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
+          "command": "vscode-office.copy-response-body",
+          "group": "navigation@0"
+        },
         {
           "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
           "command": "vscode-office.save-response-body",
           "group": "navigation@2"
-        },
-        {
-          "when": "httpResponsePreviewFocus || editorTextFocus && resourceScheme == rest-client-response",
-          "command": "vscode-office.copy-response-body",
-          "group": "navigation@3"
         },
         {
           "when": "codeSnippetPreviewFocus",
@@ -164,11 +150,11 @@
     },
     "keybindings": [
       {
-        "command": "vscode-office.request",
-        "key": "ctrl+alt+r",
-        "mac": "cmd+alt+r",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
+				"command": "vscode-office.request",
+				"key": "ctrl+enter",
+				"mac": "cmd+enter",
+				"when": "editorTextFocus && editorLangId == 'http'"
+			},
       {
         "command": "vscode-office.request",
         "key": "ctrl+alt+r",

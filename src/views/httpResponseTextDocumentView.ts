@@ -42,7 +42,8 @@ export class HttpResponseTextDocumentView {
 
     private async copyBody() {
         if (this.currentResponse) {
-            await env.clipboard.writeText(this.currentResponse.body);
+            const formattedBody = ResponseFormatUtility.formatBody(this.currentResponse.body, this.currentResponse.contentType, true);
+            await env.clipboard.writeText(formattedBody);
             window.showInformationMessage('Copied to clipboard');
         }
     }

@@ -55,6 +55,7 @@ export class CodeSnippetController {
             `'${encodeUrl(originalUrl)}'`
         ].filter(Boolean).join(process.platform === 'win32' ? ' ' : ` \\${EOL}  `);
         await this.clipboard.writeText(result);
+        window.showInformationMessage('Copied to clipboard');
     }
 
     private convertToHARHttpRequest(request: HttpRequest): HARHttpRequest {
